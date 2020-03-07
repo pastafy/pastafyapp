@@ -4,16 +4,73 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+    branches:
+        include:
+        - master
+    paths:
+        include:
+        - src/Front*
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+    - group: shsdol
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+steps:
+- task: Docker@2
+  inputs:
+    repository: 'pastafyfront'
+    command: 'build'
+    Dockerfile: '**/DockerfileFront'
+    addPipelineData: false
+
+- task: ECRPushImage@1
+  inputs:
+    awsCredentials: 'AWS'
+    regionName: 'us-east-1'
+    imageSource: 'imagename'
+    sourceImageName: 'pastafyfront'
+    sourceImageTag: '$(Build.BuildId)'
+    repositoryName: 'pastafyfront'
+    logResponse: true
+
+- task: PowerShell@2
+  displayName: Getting public IP Address
+  inputs:
+    targetType: 'inline'
+    script: |
+      $CURRENT_IP = Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
+      Write-Host "##vso[task.setvariable variable=CURRENT_IP;]$CURRENT_IP"
+      Write-Host "my environment variable is $CURRENT_IP"
+
+- task: AWSCLI@1
+  displayName: Registering an IP adress to AWS Firewall
+  inputs:
+    awsCredentials: 'AWS'
+    regionName: 'us-east-1'
+    awsCommand: 'ec2'
+    awsSubCommand: 'authorize-security-group-ingress'
+    awsArguments: --group-id $(AWSSecurityGroup) --protocol tcp --port 22 --cidr $(CURRENT_IP)/32
+
+- task: SSH@0
+  continueOnError: true
+  inputs:
+    sshEndpoint: 'AWS WEB NEW'
+    runOptions: 'commands'
+    commands: |
+      aws ecr get-login --no-include-email --region us-east-1 | awk '{print $6}' | sudo docker login -u AWS --password-stdin $(AWSECRADDR)  2>/dev/null
+      sudo docker ps -q --filter name="pastafyfront" | xargs -r sudo docker stop
+      sudo docker ps -a -q --filter name="pastafyfront" | xargs -r sudo docker rm -f
+      sudo docker pull $(AWSECRADDR)/pastafyfront
+      sudo docker run -d -p 90:80 --name pastafyfront $(AWSECRADDR)/pastafyfront
+      sudo docker image prune -f
+
+- task: AWSCLI@1
+  displayName: Deregistering an IP address from AWS Firewall
+  inputs:
+    awsCredentials: 'AWS'
+    regionName: 'us-east-1'
+    awsCommand: 'ec2'
+    awsSubCommand: 'revoke-security-group-ingress'
+    awsArguments: --group-id $(AWSSecurityGroup) --protocol tcp --port 22 --cidr $(CURRENT_IP)/32

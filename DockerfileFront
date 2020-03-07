@@ -1,0 +1,2 @@
+FROM nginx
+COPY ./src/Front /usr/share/nginx/html
