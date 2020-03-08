@@ -1,6 +1,6 @@
 # pastafy.app
 
-Welcome to the Pastafy GitHub page!
+Welcome to the Pastafy GitHub page! <br>
 <img src ="src/Front/Rotini.png" width=100>
 
 
