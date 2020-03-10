@@ -43,5 +43,6 @@ steps:
     sourceImageName: 'pastafyfront'
     sourceImageTag: '$(Build.BuildId)'
     repositoryName: 'pastafyfront'
+    pushTag: '$(Build.BuildId)'
     logResponse: true
     
