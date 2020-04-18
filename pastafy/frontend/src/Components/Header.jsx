@@ -7,7 +7,7 @@ class Header extends React.Component {
         return (
             <div>
                 <Navbar bg="light" expand="lg">
-                    <Navbar.Brand href="#home">Pasta Predictor1</Navbar.Brand>
+                    <Navbar.Brand href="#home">Pastafy</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
@@ -30,7 +30,7 @@ class Header extends React.Component {
                 <Jumbotron>
                     <h1>Hello, Pasta!</h1>
                     <p>
-                        This is a ingredient Pridictor.
+                        This is an ingredient predictor.
                     </p>
                     <p>
                         <Button variant="primary">Learn more</Button>
