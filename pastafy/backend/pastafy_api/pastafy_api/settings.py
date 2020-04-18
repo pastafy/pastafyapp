@@ -25,7 +25,7 @@ SECRET_KEY = '=wgy^^34ws#wn+%f72k*#!crvm151fvr6zromzyjm_xqe^(zic'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.pastafy.app']
+ALLOWED_HOSTS = ['api.pastafy.app', 'localhost']
 
 
 # Application definition
