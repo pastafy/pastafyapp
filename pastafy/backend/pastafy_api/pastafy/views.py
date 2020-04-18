@@ -29,18 +29,21 @@ class ListPrediction(APIView):
     # serializer_class = PredictionSerializer
 
     def get(self, request):
-        currentDirectory = os.getcwd()
+        # currentDirectory = os.getcwd()
+        #new_model = tf.keras.models.load_model(currentDirectory + '\\pastafy\\data\\ingredient_prediction_model.h5')
+        
         #The import statement is dependent on the environment
-        new_model = tf.keras.models.load_model(currentDirectory + '\\pastafy\\data\\ingredient_prediction_model.h5')
+        new_model = tf.keras.models.load_model('~/data/ingredient_prediction_model.h5')
+        
         # this import the top pasta we are using into a dataframe
-        top_pasta_df = pd.read_csv(currentDirectory + '\\pastafy\\data\\top_pasta.csv', header=0)
+        top_pasta_df = pd.read_csv('~/data/top_pasta.csv', header=0)
         #top_pasta_df.head(5)
 
         # this imports all the ingredients considered while training
-        ingredients_df = pd.read_csv(currentDirectory + '\\pastafy\\data\\ordered_ingredients.csv', header=0, index_col=0)
+        ingredients_df = pd.read_csv('~/data/ordered_ingredients.csv', header=0, index_col=0)
 
         #import the ordered ingredients , these map by index to the model so it's important order is preserved
-        ingredients_col = pd.read_csv(currentDirectory + '\\pastafy\\data\\ordered_ingredients.csv', header=0, index_col=1).transpose()
+        ingredients_col = pd.read_csv('~/data/ordered_ingredients.csv', header=0, index_col=1).transpose()
 
 
         predictor_1 = Predictor(new_model, ingredients_col.columns)
