@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   fetchSelections = async () => {
-    const BASE_URL = 'http://127.0.0.1:8000/api/prediction';
+    const BASE_URL = 'https://api.pastafy.app/api/prediction';
     const res = await fetch(BASE_URL); 
     const result = await res.json();
     this.setState({result}); 
