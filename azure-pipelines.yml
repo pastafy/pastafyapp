@@ -9,7 +9,7 @@ trigger:
         - master
     paths:
         include:
-        - src/Front*
+        - pastafy/frontend*
 
 pool:
   vmImage: 'ubuntu-latest'
