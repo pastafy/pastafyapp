@@ -65,6 +65,7 @@ MIDDLEWARE = [
 
 # new added
 CORS_ORIGIN_WHITELIST = (
+    'https://www.pastafy.app',
     'http://localhost:3000',
     'http://localhost:8000',
     'http://localhost:8080',
