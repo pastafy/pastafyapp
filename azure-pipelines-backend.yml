@@ -1,0 +1,54 @@
+# Python Django
+# Test a Django project on multiple versions of Python.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+    branches:
+        include:
+        - master
+    paths:
+        include:
+        - pastafy/backend*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+    - group: shsdol
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.8'
+    addToPath: true
+    architecture: 'x64'
+
+- task: Docker@2
+  inputs:
+    repository: 'pastafybackend'
+    command: 'build'
+    Dockerfile: '**/DockerfileBackend'
+    addPipelineData: false
+
+- task: ECRPushImage@1
+  inputs:
+    awsCredentials: 'AWS'
+    regionName: 'us-east-1'
+    imageSource: 'imagename'
+    sourceImageName: 'pastafybackend'
+    sourceImageTag: '$(Build.BuildId)'
+    repositoryName: 'pastafybackend'
+    logResponse: true
+
+- task: ECRPushImage@1
+  inputs:
+    awsCredentials: 'AWS'
+    regionName: 'us-east-1'
+    imageSource: 'imagename'
+    sourceImageName: 'pastafybackend'
+    sourceImageTag: '$(Build.BuildId)'
+    repositoryName: 'pastafybackend'
+    pushTag: '$(Build.BuildId)'
+    logResponse: true
+    
