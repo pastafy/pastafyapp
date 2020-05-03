@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import Homepage from './Components/Homepage';
-import bootstrap from 'bootstrap/dist/css/bootstrap.min.css';
+import About from './Components/About';
 import Header from './Components/Header';
-import Footer from './Components/Footer';
-import Forms from './Components/Forms'
 
+import PastaPredictorApp from './Components/PastaPredictorApp';
+import 'bootstrap/dist/css/bootstrap.min.css';
 class App extends Component {
 
   constructor(props) {
@@ -29,13 +28,17 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Header />
-        <Forms />
-        <Homepage tableProps={ this.state.result }
-                  selectBtnMgr={this.fetchSelections}
-        />
-        <Footer />
-      </div>  
+        <Header/>
+        <div className="container mt-4">
+          <div className="row">
+            <About/>
+          </div>
+          <div className="row mt-4">
+            <PastaPredictorApp tableProps={ this.state.result }
+                    selectBtnMgr={this.fetchSelections}/>
+          </div>
+        </div>  
+      </div>
     );
   }
 }
