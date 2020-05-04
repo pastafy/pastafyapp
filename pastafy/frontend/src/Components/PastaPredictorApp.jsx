@@ -2,6 +2,19 @@ import ResultsHolder from './ResultsHolder';
 import { Card, Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import MultiSelect from "@khanacademy/react-multi-select";
+
+function reFormatIngredients (arrayIngredient) {
+    let returnArray = [];
+    for (let ingredient of arrayIngredient) {
+        returnArray.push({
+            value: ingredient,
+            label: ingredient,
+        })
+    }
+    return returnArray;
+}
+
 
 export default class PastaPredictorApp extends Component {
 
@@ -12,11 +25,13 @@ export default class PastaPredictorApp extends Component {
       result: {},
       randomness: 0,
       extra_ingredients: 0,
+      selected: [],
     };
     this.fetchSelections = this.fetchSelections.bind(this);
     this.handleRandomnessChange = this.handleRandomnessChange.bind(this);
     this.handleExtraIngredientsChange = this.handleExtraIngredientsChange.bind(this);
-
+    this.availableIngredients = ["salmon", "parmesan", "pepper", "basil"];
+    this.options = reFormatIngredients(this.availableIngredients);
   }
 
   fetchSelections = async () => {
@@ -39,7 +54,7 @@ export default class PastaPredictorApp extends Component {
   }
 
     render() {
-
+        const {selected} = this.state;
         return (
 
             <div className="card w-100">
@@ -49,45 +64,59 @@ export default class PastaPredictorApp extends Component {
                     predict the best pasta types. Optionally we will show you 
                     other ingredients that pair well with your input.</p>
                 </div>
-                <div className="card-body">
-                    <p class="card-text"><b>Step 1:</b>Select your ingredients below</p>
-                    <p>TODO: add input field with ingredients, input will have dropdown that matches current input
-                    undeneath will be a container with already selected ingredients, clicking on them will remove 
-                    them from the current selection</p>
-                </div>  
-                <div className="card-body">
+                <div className="card-body m2">
+                    <p class="card-text"><b>Step 1:</b> Select your ingredients below</p>
+                    <div className="card">
+                        <div className="card-body m2">
+                            <MultiSelect
+                              options={this.options}
+                              selected={selected}
+                              onSelectedChanged={selected => this.setState({selected})}
+                              hasSelectAll={false}
+                            />
+                        </div>
+                    </div>  
+                </div>
+                <div className="card-body m2">
                     <p class="card-text"><b>Step 2:</b> Fine tune the settings</p>
-                    <div className="container">
-                        <div className="row border-bottom">
-                            <div className="col">
-                                <label className="mr-5">Randomness</label>
+                    <div class="card">
+                        <div class="card-body">
+                            <div className="container">
+                                <div className="row border-bottom">
+                                    <div className="col-xs-4">
+                                        <label className="mr-5">Randomness</label>
+                                    </div>
+                                    <div className="col-xs-4">
+                                        <label className="mr-2">Scale: 0-10</label>
+                                        <input type="range" min="0" max="10" value={this.state.randomness} onChange={this.handleRandomnessChange}/>
+                                    </div>
+                                    <div className="col">
+                                        <span  className="bg-primary p-2 font-weight-bold text-white rounded-circle">
+                                            {this.state.randomness}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="row mt-3">
+                                    <div className="col-xs-4">
+                                        <label className="mr-5">Extra Ingredients</label>
+                                    </div>
+                                    <div className="col-xs-4">
+                                            <label className="mr-2 col-xs-3">Scale: 0-10</label>
+                                            <input type="range" min="0" max="10" value={this.state.extra_ingredients} onChange={this.handleExtraIngredientsChange}/>
+                                    </div>
+                                    <div className="col">
+                                        <span  className="bg-primary p-2 font-weight-bold text-white rounded-circle">
+                                            {this.state.extra_ingredients}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="col w-100">
-                                <label className="mr-2">0</label>
-                                <input type="range" min="0" max="10" value={this.state.randomness} onChange={this.handleRandomnessChange}/>
-                                <label className="ml-2">10</label>
-                            </div>
-                            <div className="col">
-                                {this.state.randomness}
-                            </div>
-                        </div>
-                        <div className="row mt-3">
-                            <div className="col">
-                                <label className="mr-5">Extra Ingredients</label>
-                            </div>
-                            <div className="col w-100">
-                                <label className="mr-2">0</label>
-                                <input type="range" min="0" max="10" value={this.state.extra_ingredients} onChange={this.handleExtraIngredientsChange}/>
-                                <label className="ml-2">10</label>
-                            </div>
-                            <div className="col">
-                                {this.state.extra_ingredients}
-                            </div>
-                        </div>
-                        <div className="row mt-3">
-                            <Button>Predict my pasta!</Button>
                         </div>
                     </div>
+                    <div className="mt-3">
+                        <Button>Predict my pasta!</Button>
+                    </div>
+
                 </div>  
                 <div className="card-body">
                     <h4 class="card-title ">Results</h4>
