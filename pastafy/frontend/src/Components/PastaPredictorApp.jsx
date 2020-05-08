@@ -83,12 +83,12 @@ export default class PastaPredictorApp extends Component {
                         <div class="card-body">
                             <div className="container">
                                 <div className="row border-bottom">
-                                    <div className="col-xs-4">
+                                    <div className="col">
                                         <label className="mr-5">Randomness</label>
                                     </div>
-                                    <div className="col-xs-4">
+                                    <div className="col">
                                         <label className="mr-2">Scale: 0-10</label>
-                                        <input type="range" min="0" max="10" value={this.state.randomness} onChange={this.handleRandomnessChange}/>
+                                        <input className="w-75" type="range" min="0" max="10" value={this.state.randomness} onChange={this.handleRandomnessChange}/>
                                     </div>
                                     <div className="col">
                                         <span  className="bg-primary p-2 font-weight-bold text-white rounded-circle">
@@ -97,12 +97,12 @@ export default class PastaPredictorApp extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-3">
-                                    <div className="col-xs-4">
+                                    <div className="col">
                                         <label className="mr-5">Extra Ingredients</label>
                                     </div>
-                                    <div className="col-xs-4">
-                                            <label className="mr-2 col-xs-3">Scale: 0-10</label>
-                                            <input type="range" min="0" max="10" value={this.state.extra_ingredients} onChange={this.handleExtraIngredientsChange}/>
+                                    <div className="col">
+                                            <label className="mr-2" >Scale: 0-10</label>
+                                            <input className="w-75" type="range" min="0" max="10" value={this.state.extra_ingredients} onChange={this.handleExtraIngredientsChange}/>
                                     </div>
                                     <div className="col">
                                         <span  className="bg-primary p-2 font-weight-bold text-white rounded-circle">
