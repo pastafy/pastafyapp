@@ -27,19 +27,11 @@ export default class PastaPredictorApp extends Component {
       extra_ingredients: 0,
       selected: [],
     };
-    this.fetchSelections = this.fetchSelections.bind(this);
     this.handleRandomnessChange = this.handleRandomnessChange.bind(this);
     this.handleExtraIngredientsChange = this.handleExtraIngredientsChange.bind(this);
     this.availableIngredients = ["salmon", "parmesan", "pepper", "basil"];
     this.options = reFormatIngredients(this.availableIngredients);
   }
-
-  fetchSelections = async () => {
-    const BASE_URL = 'https://api.pastafy.app/api/prediction';
-    const res = await fetch(BASE_URL); 
-    const result = await res.json();
-    this.setState({result}); 
-  };
   
   handleRandomnessChange(event) {
       this.setState({randomness: event.target.value});
@@ -48,10 +40,6 @@ export default class PastaPredictorApp extends Component {
     handleExtraIngredientsChange(event) {
       this.setState({extra_ingredients: event.target.value});
     }
-  
-  async componentDidMount() {
-      this.fetchSelections();
-  }
 
     render() {
         const {selected} = this.state;
@@ -114,13 +102,13 @@ export default class PastaPredictorApp extends Component {
                         </div>
                     </div>
                     <div className="mt-3">
-                        <Button>Predict my pasta!</Button>
+                        <Button onClick={this.props.selectBtnMgr}>Predict my pasta!</Button>
                     </div>
 
                 </div>  
                 <div className="card-body">
                     <h4 class="card-title ">Results</h4>
-                    <ResultsHolder tableProps={{}}/>
+                    <ResultsHolder tableProps={this.props.tableProps}/>
                 </div>  
                             
              
@@ -131,6 +119,6 @@ export default class PastaPredictorApp extends Component {
 }
 
 PastaPredictorApp.propTypes = {
-    tableProps: PropTypes.object.isRequired,
-    selectBtnMgr: PropTypes.func.isRequired
+    selectBtnMgr: PropTypes.func.isRequired,
+    tableProps: PropTypes.object.isRequired
 }
