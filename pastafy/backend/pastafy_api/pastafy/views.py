@@ -27,8 +27,12 @@ class ListPrediction(APIView):
     # serializer_class = PredictionSerializer
     # queryset = ''
     # serializer_class = PredictionSerializer
-
-    def get(self, request):
+   
+    def post(self, request):
+        data = json.loads(request.body)
+        user_choices = data["selected"]
+        randomness = data["randomness"]
+        extra_ingredients = data["extra"]
         currentDirectory = os.getcwd()
         
         #The import statement is dependent on the environment
@@ -52,7 +56,7 @@ class ListPrediction(APIView):
         #test_prediction_result = predictor_1.predictFromList(["sage", "sausage"])
         #return test_prediction_result
         pastaPredictorPipeline_instance = PastaPredictorPipeline(predictor_1, ingredients_df, top_pasta_df)
-        result1 = pastaPredictorPipeline_instance.run_pipeline(randomness=3, user_ingredients=["sausage","sage"], numberOfExtraIngredients=10)
+        result1 = pastaPredictorPipeline_instance.run_pipeline(randomness=int(randomness), user_ingredients=user_choices, numberOfExtraIngredients=int(extra_ingredients))
 
         #convert to objects and map properties
         responseObject = ResponseObject(result1[0], result1[1], result1[2])
@@ -62,7 +66,6 @@ class ListPrediction(APIView):
 
         return Response(responseObject.__dict__)
         # Create your views here.
-
 
 class Predictor:
     def __init__(self, model, ingredients_df_columns):

@@ -30,13 +30,20 @@ export default class PastaPredictorApp extends Component {
     this.fetchSelections = this.fetchSelections.bind(this);
     this.handleRandomnessChange = this.handleRandomnessChange.bind(this);
     this.handleExtraIngredientsChange = this.handleExtraIngredientsChange.bind(this);
-    this.availableIngredients = ["salmon", "parmesan", "pepper", "basil"];
+    this.availableIngredients = ["salmon", "parmesan", "pepper", "basil", "sausage", "sage"];
     this.options = reFormatIngredients(this.availableIngredients);
   }
 
   fetchSelections = async () => {
     const BASE_URL = 'https://api.pastafy.app/api/prediction';
-    const res = await fetch(BASE_URL); 
+    const res = await fetch(BASE_URL,         
+        {
+            method: 'POST',
+            body: JSON.stringify({selected: this.state.selected, randomness: this.state.randomness, extra: this.state.extra_ingredients}),
+            headers: {
+                'Content-Type': 'application/json'
+        }
+    }); 
     const result = await res.json();
     this.setState({result}); 
   };
